@@ -1,23 +1,16 @@
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:hive_flutter/hive_flutter.dart';
 
-final authProvider = StateNotifierProvider<AuthNotifier, bool>((ref) {
-  return AuthNotifier();
-});
+final authProvider = NotifierProvider<AuthNotifier, bool>(AuthNotifier.new);
 
-class AuthNotifier extends StateNotifier<bool> {
-  AuthNotifier() : super(false) {
-    _checkAuthStatus();
-  }
-
-  void _checkAuthStatus() {
+class AuthNotifier extends Notifier<bool> {
+  @override
+  bool build() {
     final box = Hive.box('authBox');
-    final isLoggedIn = box.get('isLoggedIn', defaultValue: false);
-    state = isLoggedIn;
+    return box.get('isLoggedIn', defaultValue: false) as bool;
   }
 
   Future<void> login(String phone) async {
-    // Simulate network delay
     await Future.delayed(const Duration(seconds: 1));
     final box = Hive.box('authBox');
     await box.put('isLoggedIn', true);
@@ -32,4 +25,3 @@ class AuthNotifier extends StateNotifier<bool> {
     state = false;
   }
 }
-

@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import '../../core/theme/app_decorations.dart';
+import '../../../core/theme/app_decorations.dart';
 
 class PrimaryButton extends StatefulWidget {
   final String text;

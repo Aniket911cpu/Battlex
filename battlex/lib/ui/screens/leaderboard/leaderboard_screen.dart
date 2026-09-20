@@ -13,7 +13,7 @@ class LeaderboardScreen extends StatefulWidget {
 }
 
 class _LeaderboardScreenState extends State<LeaderboardScreen> {
-  int _currentIndex = 2;
+  final int _currentIndex = 2;
 
   @override
   Widget build(BuildContext context) {

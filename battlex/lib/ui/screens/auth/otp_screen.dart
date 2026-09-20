@@ -39,8 +39,8 @@ class _OtpScreenState extends ConsumerState<OtpScreen> {
     if (_isLoading) return;
     setState(() => _isLoading = true);
     await Future.delayed(const Duration(seconds: 1));
+    await ref.read(authProvider.notifier).login('+91 9876543210');
     if (mounted) {
-      await ref.read(authProvider.notifier).login('+91 9876543210');
       setState(() => _isLoading = false);
       context.go('/home');
     }

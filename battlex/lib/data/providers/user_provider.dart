@@ -1,37 +1,34 @@
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import '../models/user_model.dart';
 import 'package:hive_flutter/hive_flutter.dart';
 import 'dart:convert';
+import '../models/user_model.dart';
 
-final userProvider = StateNotifierProvider<UserNotifier, UserModel?>((ref) {
-  return UserNotifier();
-});
+final userProvider = NotifierProvider<UserNotifier, UserModel?>(UserNotifier.new);
 
-class UserNotifier extends StateNotifier<UserModel?> {
-  UserNotifier() : super(null) {
-    _loadUser();
-  }
-
-  void _loadUser() {
+class UserNotifier extends Notifier<UserModel?> {
+  @override
+  UserModel? build() {
     final box = Hive.box('userBox');
     final userJsonStr = box.get('currentUser');
     if (userJsonStr != null) {
-      final userJson = jsonDecode(userJsonStr);
-      state = UserModel.fromJson(userJson);
-    } else {
-      // Default Mock User
-      state = UserModel(
-        id: 'BX-948291',
-        username: 'ShadowNinja',
-        phone: '+91 9876543210',
-        email: 'player@battlex.pro',
-        isKycVerified: true,
-        vipTier: 'DIAMOND',
-        bgmiId: '51239847192',
-        ludoId: 'Shadow_Ludo',
-      );
-      _saveUser(state!);
+      try {
+        final userJson = jsonDecode(userJsonStr as String);
+        return UserModel.fromJson(userJson);
+      } catch (_) {}
     }
+    // Default mock user
+    final defaultUser = UserModel(
+      id: 'BX-948291',
+      username: 'ShadowNinja',
+      phone: '+91 9876543210',
+      email: 'player@battlex.pro',
+      isKycVerified: true,
+      vipTier: 'DIAMOND',
+      bgmiId: '51239847192',
+      ludoId: 'Shadow_Ludo',
+    );
+    _saveUser(defaultUser);
+    return defaultUser;
   }
 
   void _saveUser(UserModel user) {
@@ -44,4 +41,3 @@ class UserNotifier extends StateNotifier<UserModel?> {
     _saveUser(updatedUser);
   }
 }
-

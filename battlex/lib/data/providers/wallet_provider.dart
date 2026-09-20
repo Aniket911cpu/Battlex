@@ -3,9 +3,7 @@ import 'package:hive_flutter/hive_flutter.dart';
 import 'dart:convert';
 import '../models/transaction_model.dart';
 
-final walletProvider = StateNotifierProvider<WalletNotifier, WalletState>((ref) {
-  return WalletNotifier();
-});
+final walletProvider = NotifierProvider<WalletNotifier, WalletState>(WalletNotifier.new);
 
 class WalletState {
   final double balance;
@@ -21,22 +19,22 @@ class WalletState {
   }
 }
 
-class WalletNotifier extends StateNotifier<WalletState> {
-  WalletNotifier() : super(WalletState(balance: 0, transactions: [])) {
-    _loadWallet();
-  }
-
-  void _loadWallet() {
+class WalletNotifier extends Notifier<WalletState> {
+  @override
+  WalletState build() {
     final box = Hive.box('walletBox');
-    final balance = box.get('balance', defaultValue: 2450.0);
-    
+    final balance = (box.get('balance', defaultValue: 2450.0) as num).toDouble();
+
     final txString = box.get('transactions');
     List<TransactionModel> txs = [];
     if (txString != null) {
-      final List<dynamic> jsonList = jsonDecode(txString);
-      txs = jsonList.map((e) => TransactionModel.fromJson(e)).toList();
-    } else {
-      // Mock initial transactions
+      try {
+        final List<dynamic> jsonList = jsonDecode(txString as String);
+        txs = jsonList.map((e) => TransactionModel.fromJson(e)).toList();
+      } catch (_) {}
+    }
+
+    if (txs.isEmpty) {
       txs = [
         TransactionModel(id: 'tx1', title: 'Winnings - BGMI Match', date: 'Today, 10:30 PM', amount: 500, type: 'credit', status: 'SUCCESS'),
         TransactionModel(id: 'tx2', title: 'Entry Fee - BGMI Match', date: 'Today, 09:00 PM', amount: 50, type: 'debit', status: 'SUCCESS'),
@@ -44,8 +42,8 @@ class WalletNotifier extends StateNotifier<WalletState> {
       ];
       _saveTransactions(txs);
     }
-    
-    state = WalletState(balance: balance, transactions: txs);
+
+    return WalletState(balance: balance, transactions: txs);
   }
 
   void _saveBalance(double balance) {
@@ -57,10 +55,9 @@ class WalletNotifier extends StateNotifier<WalletState> {
   }
 
   Future<void> addCash(double amount) async {
-    // Simulate delay
     await Future.delayed(const Duration(seconds: 1));
     final newBalance = state.balance + amount;
-    
+
     final tx = TransactionModel(
       id: DateTime.now().millisecondsSinceEpoch.toString(),
       title: 'Cash Deposit',
@@ -69,10 +66,9 @@ class WalletNotifier extends StateNotifier<WalletState> {
       type: 'credit',
       status: 'SUCCESS',
     );
-    
+
     final newTxs = [tx, ...state.transactions];
     state = state.copyWith(balance: newBalance, transactions: newTxs);
-    
     _saveBalance(newBalance);
     _saveTransactions(newTxs);
   }
@@ -88,15 +84,13 @@ class WalletNotifier extends StateNotifier<WalletState> {
         type: 'debit',
         status: 'SUCCESS',
       );
-      
+
       final newTxs = [tx, ...state.transactions];
       state = state.copyWith(balance: newBalance, transactions: newTxs);
-      
       _saveBalance(newBalance);
       _saveTransactions(newTxs);
       return true;
     }
-    return false; // Insufficient funds
+    return false;
   }
 }
-

@@ -19,19 +19,23 @@ class _WithdrawScreenState extends ConsumerState<WithdrawScreen> {
 
   void _handleWithdraw() async {
     final amount = double.tryParse(_amountController.text) ?? 0;
-    if (amount < 10) return; // Min withdrawal
+    if (amount < 10) return;
 
     setState(() => _isLoading = true);
-    await Future.delayed(const Duration(seconds: 1)); // Simulate network
-    
+    await Future.delayed(const Duration(seconds: 1));
+
+    final success = await ref.read(walletProvider.notifier).deductCash(amount, 'Cash Withdrawal');
+
     if (mounted) {
-      final success = await ref.read(walletProvider.notifier).deductCash(amount, 'Cash Withdrawal');
       setState(() => _isLoading = false);
       if (success) {
         Navigator.of(context).pop();
       } else {
         ScaffoldMessenger.of(context).showSnackBar(
-          const SnackBar(content: Text('Insufficient withdrawable balance.'), backgroundColor: AppColors.error),
+          const SnackBar(
+            content: Text('Insufficient withdrawable balance.'),
+            backgroundColor: AppColors.error,
+          ),
         );
       }
     }

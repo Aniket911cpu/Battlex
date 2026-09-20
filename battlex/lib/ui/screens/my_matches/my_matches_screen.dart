@@ -15,7 +15,7 @@ class MyMatchesScreen extends StatefulWidget {
 
 class _MyMatchesScreenState extends State<MyMatchesScreen> with SingleTickerProviderStateMixin {
   late TabController _tabController;
-  int _currentIndex = 1;
+  final int _currentIndex = 1;
 
   @override
   void initState() {

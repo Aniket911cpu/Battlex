@@ -2,19 +2,12 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import '../models/match_model.dart';
 import 'wallet_provider.dart';
 
-final matchProvider = StateNotifierProvider<MatchNotifier, List<MatchModel>>((ref) {
-  return MatchNotifier(ref);
-});
+final matchProvider = NotifierProvider<MatchNotifier, List<MatchModel>>(MatchNotifier.new);
 
-class MatchNotifier extends StateNotifier<List<MatchModel>> {
-  final Ref ref;
-
-  MatchNotifier(this.ref) : super([]) {
-    _loadMatches();
-  }
-
-  void _loadMatches() {
-    state = [
+class MatchNotifier extends Notifier<List<MatchModel>> {
+  @override
+  List<MatchModel> build() {
+    return [
       MatchModel(
         id: 'M1',
         title: 'BGMI Erangel Squads',
@@ -67,8 +60,7 @@ class MatchNotifier extends StateNotifier<List<MatchModel>> {
     if (match.isJoined) return true;
     if (match.filledSpots >= match.totalSpots) return false;
 
-    final walletNotifier = ref.read(walletProvider.notifier);
-    final success = await walletNotifier.deductCash(
+    final success = await ref.read(walletProvider.notifier).deductCash(
       match.entryFee.toDouble(),
       'Entry Fee - ${match.title}',
     );
@@ -87,4 +79,3 @@ class MatchNotifier extends StateNotifier<List<MatchModel>> {
     return false;
   }
 }
-
