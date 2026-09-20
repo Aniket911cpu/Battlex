@@ -115,87 +115,157 @@ class _HomeScreenState extends State<HomeScreen> {
                           title: 'BGMI Erangel Classic Squad',
                           gameMode: 'SQUAD',
                           matchType: 'CLASSIC',
-                          prizePool: '₹2,500',
-                          entryFee: '₹50',
-                          capacityProgress: 0.84,
-                          filledLabel: '84/100',
-                          leftLabel: '16 LEFT',
-                          isLive: true,
-                          onTap: () => context.push('/match/1'),
-                        ),
-                        const SizedBox(height: 16),
-                        TournamentCard(
-                          title: 'Free Fire Clash Squad 4v4',
-                          gameMode: '4v4',
-                          matchType: 'TDM',
-                          prizePool: '₹1,000',
-                          entryFee: '₹20',
-                          capacityProgress: 0.35,
-                          filledLabel: '14/40',
-                          leftLabel: '26 LEFT',
-                          isLive: false,
-                          onTap: () => context.push('/match/2'),
-                        ),
-                      ],
+      appBar: const BattleXAppBar(title: 'BattleX'),
+      body: SingleChildScrollView(
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.stretch,
+          children: [
+            // Win Ticker
+            Container(
+              height: 40,
+              color: AppColors.surfaceContainerHigh,
+              child: ListView.builder(
+                scrollDirection: Axis.horizontal,
+                itemCount: 5,
+                itemBuilder: (context, index) {
+                  return Padding(
+                    padding: const EdgeInsets.symmetric(horizontal: 16.0),
+                    child: Center(
+                      child: Row(
+                        children: [
+                          const Icon(Icons.emoji_events, color: AppColors.tertiary, size: 16),
+                          const SizedBox(width: 8),
+                          Text('ShadowNinja won ₹5,000 in BGMI Squads', 
+                            style: AppTextStyles.bodySm.copyWith(color: AppColors.secondary),
+                          ),
+                        ],
+                      ),
                     ),
-                  ),
-                  const SizedBox(height: 32),
+                  );
+                },
+              ),
+            ),
+            
+            // Hero Welcome Banner
+            Padding(
+              padding: const EdgeInsets.all(16.0),
+              child: GlassContainer(
+                padding: const EdgeInsets.all(20),
+                child: Row(
+                  children: [
+                    Expanded(
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Text('WELCOME BACK,', style: AppTextStyles.labelSm.copyWith(color: AppColors.secondary)),
+                          Text(user?.username.toUpperCase() ?? 'GAMER', style: AppTextStyles.headlineMd.copyWith(color: AppColors.onSurface)),
+                          const SizedBox(height: 8),
+                          Container(
+                            padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
+                            decoration: BoxDecoration(
+                              color: AppColors.primaryContainer.withValues(alpha: 0.2),
+                              borderRadius: BorderRadius.circular(4),
+                              border: Border.all(color: AppColors.primaryContainer),
+                            ),
+                            child: Text('PRO PLAYER', style: AppTextStyles.labelSm.copyWith(color: AppColors.primaryContainer)),
+                          ),
+                        ],
+                      ),
+                    ),
+                    Image.network('https://placeholder.com/100x100', width: 80, height: 80),
+                  ],
+                ),
+              ),
+            ),
+
+            // Quick Actions Hub
+            Padding(
+              padding: const EdgeInsets.symmetric(horizontal: 16.0),
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  _buildQuickAction(context, Icons.science, 'Labs', '/labs'),
+                  _buildQuickAction(context, Icons.group_add, 'Refer', '/refer'),
+                  _buildQuickAction(context, Icons.diamond, 'VIP Pass', '/membership'),
+                  _buildQuickAction(context, Icons.support_agent, 'Support', '/settings'),
                 ],
               ),
             ),
-          ),
-        ],
+            const SizedBox(height: 24),
+
+            // Game Filters
+            SizedBox(
+              height: 40,
+              child: ListView(
+                scrollDirection: Axis.horizontal,
+                padding: const EdgeInsets.symmetric(horizontal: 16),
+                children: [
+                  _buildGameFilter('All'),
+                  _buildGameFilter('BGMI'),
+                  _buildGameFilter('Free Fire'),
+                  _buildGameFilter('Ludo'),
+                ],
+              ),
+            ),
+            const SizedBox(height: 16),
+
+            // Tournaments List
+            Padding(
+              padding: const EdgeInsets.symmetric(horizontal: 16.0),
+              child: Text('LIVE & UPCOMING', style: AppTextStyles.titleLg.copyWith(color: AppColors.onSurface)),
+            ),
+            const SizedBox(height: 12),
+            ListView.builder(
+              shrinkWrap: true,
+              physics: const NeverScrollableScrollPhysics(),
+              padding: const EdgeInsets.symmetric(horizontal: 16.0),
+              itemCount: filteredMatches.length,
+              itemBuilder: (context, index) {
+                final match = filteredMatches[index];
+                return Padding(
+                  padding: const EdgeInsets.only(bottom: 16.0),
+                  child: TournamentCard(
+                    title: match.title,
+                    game: match.game,
+                    time: match.time,
+                    prizePool: '₹${match.prizePool}',
+                    entryFee: match.entryFee == 0 ? 'FREE' : '₹${match.entryFee}',
+                    totalSpots: match.totalSpots,
+                    filledSpots: match.filledSpots,
+                    onTap: () => context.push('/match/details'), // In a real app we'd pass matchId
+                  ),
+                );
+              },
+            ),
+            const SizedBox(height: 24),
+          ],
+        ),
       ),
       bottomNavigationBar: BattleXBottomNav(
         currentIndex: _currentIndex,
         onTap: (index) {
-          setState(() {
-            _currentIndex = index;
-            if (index == 1) context.go('/my-matches');
-            if (index == 2) context.go('/leaderboard');
-            if (index == 3) context.go('/wallet');
-            if (index == 4) context.go('/profile');
-          });
+          if (index == 1) context.go('/my-matches');
+          if (index == 2) context.go('/leaderboard');
+          if (index == 3) context.go('/wallet');
+          if (index == 4) context.go('/profile');
         },
       ),
     );
   }
 
-  Widget _buildHubAction(IconData icon, String label, VoidCallback onTap) {
-    return GestureDetector(
-      onTap: onTap,
+  Widget _buildQuickAction(BuildContext context, IconData icon, String label, String route) {
+    return InkWell(
+      onTap: () => context.push(route),
       child: Column(
         children: [
           Container(
-            width: 56,
-            height: 56,
+            padding: const EdgeInsets.all(12),
             decoration: BoxDecoration(
               color: AppColors.surfaceContainerHigh,
               shape: BoxShape.circle,
               border: Border.all(color: AppColors.surfaceContainerHighest),
             ),
-            child: Icon(icon, color: AppColors.primaryContainer, size: 28),
+            child: Icon(icon, color: AppColors.secondary, size: 24),
           ),
           const SizedBox(height: 8),
-          Text(label, style: AppTextStyles.labelSm.copyWith(color: AppColors.onSurface)),
-        ],
-      ),
-    );
-  }
-
-  Widget _buildFilterChip(String label, bool isSelected) {
-    return Container(
-      margin: const EdgeInsets.only(right: 8),
-      padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
-      decoration: BoxDecoration(
-        color: isSelected ? AppColors.primaryContainer.withOpacity(0.2) : AppColors.surfaceContainerHigh,
-        borderRadius: BorderRadius.circular(16),
-        border: Border.all(color: isSelected ? AppColors.primaryContainer : AppColors.surfaceContainerHighest),
-      ),
-      child: Text(
-        label,
-        style: AppTextStyles.labelMd.copyWith(color: isSelected ? AppColors.primaryContainer : AppColors.secondary),
-      ),
-    );
-  }
 }

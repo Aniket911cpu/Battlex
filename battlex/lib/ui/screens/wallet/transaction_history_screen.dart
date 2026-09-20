@@ -1,21 +1,17 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import '../../components/app_bar/battlex_app_bar.dart';
 import '../../../core/theme/app_colors.dart';
 import '../../../core/theme/app_text_styles.dart';
+import '../../../data/providers/wallet_provider.dart';
 
-class TransactionHistoryScreen extends StatelessWidget {
+class TransactionHistoryScreen extends ConsumerWidget {
   const TransactionHistoryScreen({super.key});
 
   @override
-  Widget build(BuildContext context) {
-    // Dummy Data
-    final transactions = [
-      {'title': 'Winnings - BGMI Match', 'date': 'Today, 10:30 PM', 'amount': '+₹500', 'type': 'credit', 'status': 'SUCCESS'},
-      {'title': 'Entry Fee - BGMI Match', 'date': 'Today, 09:00 PM', 'amount': '-₹50', 'type': 'debit', 'status': 'SUCCESS'},
-      {'title': 'Cash Withdrawal', 'date': 'Yesterday, 04:15 PM', 'amount': '-₹1,500', 'type': 'debit', 'status': 'PENDING'},
-      {'title': 'Cash Deposit', 'date': 'Oct 15, 2026', 'amount': '+₹200', 'type': 'credit', 'status': 'SUCCESS'},
-      {'title': 'Referral Bonus', 'date': 'Oct 10, 2026', 'amount': '+₹50', 'type': 'credit', 'status': 'SUCCESS'},
-    ];
+  Widget build(BuildContext context, WidgetRef ref) {
+    final walletState = ref.watch(walletProvider);
+    final transactions = walletState.transactions;
 
     return Scaffold(
       appBar: const BattleXAppBar(title: 'Transaction History', showBackButton: true),
@@ -42,8 +38,8 @@ class TransactionHistoryScreen extends StatelessWidget {
               separatorBuilder: (context, index) => const Divider(color: AppColors.surfaceContainerLowest, height: 1),
               itemBuilder: (context, index) {
                 final t = transactions[index];
-                final isCredit = t['type'] == 'credit';
-                final isPending = t['status'] == 'PENDING';
+                final isCredit = t.type == 'credit';
+                final isPending = t.status == 'PENDING';
                 
                 return Padding(
                   padding: const EdgeInsets.symmetric(vertical: 16.0),
@@ -65,17 +61,17 @@ class TransactionHistoryScreen extends StatelessWidget {
                         child: Column(
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
-                            Text(t['title']!, style: AppTextStyles.titleMd.copyWith(color: AppColors.onSurface)),
+                            Text(t.title, style: AppTextStyles.titleMd.copyWith(color: AppColors.onSurface)),
                             const SizedBox(height: 4),
                             Row(
                               children: [
-                                Text(t['date']!, style: AppTextStyles.bodySm.copyWith(color: AppColors.secondary)),
+                                Text(t.date, style: AppTextStyles.bodySm.copyWith(color: AppColors.secondary)),
                                 if (isPending) ...[
                                   const SizedBox(width: 8),
                                   Container(
                                     padding: const EdgeInsets.symmetric(horizontal: 6, vertical: 2),
                                     decoration: BoxDecoration(
-                                      color: AppColors.tertiaryContainer.withOpacity(0.2),
+                                      color: AppColors.tertiaryContainer.withValues(alpha: 0.2),
                                       borderRadius: BorderRadius.circular(4),
                                     ),
                                     child: Text('PENDING', style: AppTextStyles.labelSm.copyWith(color: AppColors.tertiary, fontSize: 8)),
@@ -87,7 +83,7 @@ class TransactionHistoryScreen extends StatelessWidget {
                         ),
                       ),
                       Text(
-                        t['amount']!, 
+                        '${isCredit ? '+' : '-'}₹${t.amount.toInt()}', 
                         style: AppTextStyles.titleMd.copyWith(
                           color: isCredit ? AppColors.successGreen : AppColors.onSurface,
                         ),

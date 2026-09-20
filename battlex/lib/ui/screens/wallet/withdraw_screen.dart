@@ -1,26 +1,39 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import '../../components/app_bar/battlex_app_bar.dart';
 import '../../components/glass_container.dart';
 import '../../../core/theme/app_colors.dart';
 import '../../../core/theme/app_text_styles.dart';
+import '../../../data/providers/wallet_provider.dart';
 
-class WithdrawScreen extends StatefulWidget {
+class WithdrawScreen extends ConsumerStatefulWidget {
   const WithdrawScreen({super.key});
 
   @override
-  State<WithdrawScreen> createState() => _WithdrawScreenState();
+  ConsumerState<WithdrawScreen> createState() => _WithdrawScreenState();
 }
 
-class _WithdrawScreenState extends State<WithdrawScreen> {
+class _WithdrawScreenState extends ConsumerState<WithdrawScreen> {
   final TextEditingController _amountController = TextEditingController();
   bool _isLoading = false;
 
   void _handleWithdraw() async {
+    final amount = double.tryParse(_amountController.text) ?? 0;
+    if (amount < 10) return; // Min withdrawal
+
     setState(() => _isLoading = true);
-    await Future.delayed(const Duration(seconds: 1));
+    await Future.delayed(const Duration(seconds: 1)); // Simulate network
+    
     if (mounted) {
+      final success = await ref.read(walletProvider.notifier).deductCash(amount, 'Cash Withdrawal');
       setState(() => _isLoading = false);
-      Navigator.of(context).pop();
+      if (success) {
+        Navigator.of(context).pop();
+      } else {
+        ScaffoldMessenger.of(context).showSnackBar(
+          const SnackBar(content: Text('Insufficient withdrawable balance.'), backgroundColor: AppColors.error),
+        );
+      }
     }
   }
 
@@ -32,6 +45,9 @@ class _WithdrawScreenState extends State<WithdrawScreen> {
 
   @override
   Widget build(BuildContext context) {
+    final walletState = ref.watch(walletProvider);
+    final withdrawable = walletState.balance * 0.6; // Mock withdrawable portion
+
     return Scaffold(
       appBar: const BattleXAppBar(title: 'Withdraw Winnings', showBackButton: true),
       body: SafeArea(
@@ -50,14 +66,14 @@ class _WithdrawScreenState extends State<WithdrawScreen> {
                         children: [
                           Text('WITHDRAWABLE BALANCE', style: AppTextStyles.labelSm.copyWith(color: AppColors.secondary)),
                           const SizedBox(height: 8),
-                          Text('₹1,500', style: AppTextStyles.statNumeric.copyWith(color: AppColors.primaryContainer, fontSize: 40)),
+                          Text('₹${withdrawable.toInt()}', style: AppTextStyles.statNumeric.copyWith(color: AppColors.primaryContainer, fontSize: 40)),
                           const SizedBox(height: 16),
                           Container(
                             padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
                             decoration: BoxDecoration(
-                              color: AppColors.errorContainer.withOpacity(0.1),
+                              color: AppColors.errorContainer.withValues(alpha: 0.1),
                               borderRadius: BorderRadius.circular(8),
-                              border: Border.all(color: AppColors.errorContainer.withOpacity(0.3)),
+                              border: Border.all(color: AppColors.errorContainer.withValues(alpha: 0.3)),
                             ),
                             child: Row(
                               children: [

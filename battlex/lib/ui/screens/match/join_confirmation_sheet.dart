@@ -1,146 +1,191 @@
 import 'package:flutter/material.dart';
-import '../../components/glass_container.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import '../../components/buttons/primary_button.dart';
 import '../../../core/theme/app_colors.dart';
 import '../../../core/theme/app_text_styles.dart';
-import 'package:go_router/go_router.dart';
+import '../../../data/providers/wallet_provider.dart';
+import '../../../data/providers/match_provider.dart';
 
-class JoinConfirmationSheet extends StatefulWidget {
-  final double entryFee;
-  final double balance;
-
-  const JoinConfirmationSheet({
-    super.key,
-    required this.entryFee,
-    required this.balance,
-  });
+class JoinConfirmationSheet extends ConsumerStatefulWidget {
+  const JoinConfirmationSheet({super.key});
 
   @override
-  State<JoinConfirmationSheet> createState() => _JoinConfirmationSheetState();
+  ConsumerState<JoinConfirmationSheet> createState() => _JoinConfirmationSheetState();
 }
 
-class _JoinConfirmationSheetState extends State<JoinConfirmationSheet> {
+class _JoinConfirmationSheetState extends ConsumerState<JoinConfirmationSheet> {
   bool _isLoading = false;
 
   void _handleConfirm() async {
     setState(() => _isLoading = true);
-    await Future.delayed(const Duration(seconds: 2));
+    
+    // In a real app we'd pass matchId, hardcoding M1 for demo
+    final success = await ref.read(matchProvider.notifier).joinMatch('M1', context);
+    
     if (mounted) {
       setState(() => _isLoading = false);
-      context.pop(); // Close sheet
+      Navigator.pop(context); // Close sheet
       
-      // Show success toast (using scaffold messenger for now)
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(
-          content: Row(
-            children: [
-              const Icon(Icons.check_circle, color: Colors.white),
-              const SizedBox(width: 8),
-              const Text('Successfully joined the match!'),
-            ],
+      if (success) {
+        // Show success snackbar
+        ScaffoldMessenger.of(context).showSnackBar(
+          const SnackBar(
+            content: Text('Successfully joined the match!'),
+            backgroundColor: AppColors.successGreen,
           ),
-          backgroundColor: AppColors.successGreen,
-          behavior: SnackBarBehavior.floating,
-        ),
-      );
+        );
+      } else {
+        // Show error (insufficient balance or full)
+        ScaffoldMessenger.of(context).showSnackBar(
+          const SnackBar(
+            content: Text('Failed to join. Check balance or match capacity.'),
+            backgroundColor: AppColors.error,
+          ),
+        );
+      }
     }
   }
 
   @override
   Widget build(BuildContext context) {
-    final bool hasEnoughBalance = widget.balance >= widget.entryFee;
+    final walletState = ref.watch(walletProvider);
+    final entryFee = 50.0;
+    final hasSufficientBalance = walletState.balance >= entryFee;
 
     return Container(
-      decoration: BoxDecoration(
-        color: AppColors.surfaceContainerLowest,
-        borderRadius: const BorderRadius.vertical(top: Radius.circular(24)),
-        border: Border.all(color: AppColors.surfaceContainerHigh),
-      ),
       padding: const EdgeInsets.all(24),
+      decoration: const BoxDecoration(
+        color: AppColors.surface,
+        borderRadius: BorderRadius.vertical(top: Radius.circular(24)),
+      ),
       child: SafeArea(
         child: Column(
           mainAxisSize: MainAxisSize.min,
           crossAxisAlignment: CrossAxisAlignment.stretch,
           children: [
-            // Handle bar
-            Center(
-              child: Container(
-                width: 40,
-                height: 4,
-                margin: const EdgeInsets.only(bottom: 24),
-                decoration: BoxDecoration(
-                  color: AppColors.surfaceContainerHigh,
-                  borderRadius: BorderRadius.circular(2),
+            Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: [
+                Text('CONFIRM ENTRY', style: AppTextStyles.titleLg.copyWith(color: AppColors.onSurface)),
+                IconButton(
+                  icon: const Icon(Icons.close, color: AppColors.secondary),
+                  onPressed: () => Navigator.pop(context),
                 ),
-              ),
+              ],
             ),
-            
-            Text('Confirm Entry', style: AppTextStyles.headlineMd.copyWith(color: AppColors.onSurface)),
             const SizedBox(height: 24),
             
-            GlassContainer(
-              padding: const EdgeInsets.all(16),
-              child: Column(
-                children: [
-                  Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            // Match Details Summary
+            Row(
+              children: [
+                Container(
+                  width: 48,
+                  height: 48,
+                  decoration: BoxDecoration(
+                    color: AppColors.surfaceContainerHigh,
+                    borderRadius: BorderRadius.circular(8),
+                  ),
+                  child: const Icon(Icons.sports_esports, color: AppColors.primaryContainer),
+                ),
+                const SizedBox(width: 16),
+                Expanded(
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
-                      Text('Entry Fee', style: AppTextStyles.bodyMd.copyWith(color: AppColors.secondary)),
-                      Text('₹${widget.entryFee.toInt()}', style: AppTextStyles.titleMd.copyWith(color: AppColors.onSurface)),
+                      Text('BGMI Erangel Squads', style: AppTextStyles.titleMd.copyWith(color: AppColors.onSurface)),
+                      Text('Today, 09:00 PM', style: AppTextStyles.bodySm.copyWith(color: AppColors.secondary)),
                     ],
                   ),
-                  const Padding(
-                    padding: EdgeInsets.symmetric(vertical: 12.0),
-                    child: Divider(color: AppColors.surfaceContainerHighest),
-                  ),
+                ),
+              ],
+            ),
+            const SizedBox(height: 24),
+            const Divider(color: AppColors.surfaceContainerHighest, height: 1),
+            const SizedBox(height: 24),
+            
+            // Payment Summary
+            _buildSummaryRow('Entry Fee', '₹$entryFee'),
+            const SizedBox(height: 12),
+            _buildSummaryRow('Bonus Cash Usable', '-₹0', isDiscount: true),
+            const SizedBox(height: 16),
+            const Divider(color: AppColors.surfaceContainerLowest, height: 1),
+            const SizedBox(height: 16),
+            Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: [
+                Text('To Pay', style: AppTextStyles.titleLg.copyWith(color: AppColors.onSurface)),
+                Text('₹$entryFee', style: AppTextStyles.titleLg.copyWith(color: AppColors.primaryContainer)),
+              ],
+            ),
+            const SizedBox(height: 24),
+            
+            // Current Balance
+            Container(
+              padding: const EdgeInsets.all(12),
+              decoration: BoxDecoration(
+                color: hasSufficientBalance 
+                    ? AppColors.surfaceContainerHigh 
+                    : AppColors.errorContainer.withValues(alpha: 0.2),
+                borderRadius: BorderRadius.circular(8),
+                border: Border.all(
+                  color: hasSufficientBalance 
+                      ? AppColors.surfaceContainerHighest 
+                      : AppColors.error,
+                ),
+              ),
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
                   Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
-                      Text('Current Balance', style: AppTextStyles.bodyMd.copyWith(color: AppColors.secondary)),
-                      Text('₹${widget.balance.toInt()}', style: AppTextStyles.titleMd.copyWith(
-                        color: hasEnoughBalance ? AppColors.successGreen : AppColors.error,
+                      Icon(Icons.account_balance_wallet, 
+                        color: hasSufficientBalance ? AppColors.secondary : AppColors.error, 
+                        size: 20,
+                      ),
+                      const SizedBox(width: 8),
+                      Text('Wallet Balance', style: AppTextStyles.bodyMd.copyWith(
+                        color: hasSufficientBalance ? AppColors.secondary : AppColors.error,
                       )),
                     ],
                   ),
+                  Text('₹${walletState.balance.toInt()}', style: AppTextStyles.titleMd.copyWith(
+                    color: hasSufficientBalance ? AppColors.onSurface : AppColors.error,
+                  )),
                 ],
               ),
             ),
             const SizedBox(height: 24),
-
-            if (!hasEnoughBalance)
-              Container(
-                padding: const EdgeInsets.all(12),
-                margin: const EdgeInsets.only(bottom: 24),
-                decoration: BoxDecoration(
-                  color: AppColors.errorContainer.withOpacity(0.2),
-                  borderRadius: BorderRadius.circular(8),
-                  border: Border.all(color: AppColors.errorContainer),
-                ),
-                child: Row(
-                  children: [
-                    const Icon(Icons.warning_amber_rounded, color: AppColors.error),
-                    const SizedBox(width: 8),
-                    Expanded(
-                      child: Text('Insufficient balance. Please add cash to your wallet to join this match.',
-                        style: AppTextStyles.bodySm.copyWith(color: AppColors.error),
-                      ),
-                    ),
-                  ],
-                ),
-              ),
-
+            
+            // Action Button
             PrimaryButton(
-              text: hasEnoughBalance ? 'CONFIRM & PAY ₹${widget.entryFee.toInt()}' : 'ADD CASH',
+              text: hasSufficientBalance ? 'CONFIRM & JOIN' : 'ADD CASH TO JOIN',
               isLoading: _isLoading,
-              onPressed: hasEnoughBalance ? _handleConfirm : () {
-                // Navigate to add cash
-                context.pop();
-                context.push('/wallet/add-cash');
+              onPressed: () {
+                if (hasSufficientBalance) {
+                  _handleConfirm();
+                } else {
+                  Navigator.pop(context); // Close sheet
+                  // Navigator.pushNamed(context, '/wallet/add-cash');
+                  // Since we are using GoRouter, would use context.push but we popped. 
+                  // In real app, use callback.
+                }
               },
             ),
           ],
         ),
       ),
+    );
+  }
+
+  Widget _buildSummaryRow(String label, String value, {bool isDiscount = false}) {
+    return Row(
+      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+      children: [
+        Text(label, style: AppTextStyles.bodyMd.copyWith(color: AppColors.secondary)),
+        Text(value, style: AppTextStyles.titleMd.copyWith(
+          color: isDiscount ? AppColors.successGreen : AppColors.onSurface,
+        )),
+      ],
     );
   }
 }

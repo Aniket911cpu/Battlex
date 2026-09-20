@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:go_router/go_router.dart';
 import '../../components/app_bar/battlex_app_bar.dart';
 import '../../components/glass_container.dart';
 import '../../components/buttons/primary_button.dart';
@@ -17,7 +16,7 @@ class MatchRoomScreen extends StatelessWidget {
       context: context,
       backgroundColor: Colors.transparent,
       isScrollControlled: true,
-      builder: (context) => const JoinConfirmationSheet(entryFee: 50, balance: 2450),
+      builder: (context) => const JoinConfirmationSheet(),
     );
   }
 
