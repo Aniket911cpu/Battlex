@@ -24,7 +24,7 @@ class _LoginScreenState extends State<LoginScreen> {
     await Future.delayed(const Duration(seconds: 2));
     if (mounted) {
       setState(() => _isLoading = false);
-      // context.go('/home'); // Will go to home once Phase 3 is ready
+      context.go('/home'); // Now routes to home correctly
     }
   }
 

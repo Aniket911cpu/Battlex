@@ -6,7 +6,8 @@ import '../../ui/screens/auth/login_screen.dart';
 import '../../ui/screens/auth/register_screen.dart';
 import '../../ui/screens/auth/otp_screen.dart';
 import '../../ui/screens/kyc/kyc_screen.dart';
-// import '../../ui/screens/home/home_screen.dart'; // To be implemented in Phase 3
+import '../../ui/screens/home/home_screen.dart';
+import '../../ui/screens/match/match_room_screen.dart';
 
 class AppRouter {
   static final router = GoRouter(
@@ -36,12 +37,14 @@ class AppRouter {
         path: '/kyc',
         builder: (context, state) => const KycScreen(),
       ),
-      /* 
       GoRoute(
         path: '/home',
         builder: (context, state) => const HomeScreen(),
       ),
-      */
+      GoRoute(
+        path: '/match/:id',
+        builder: (context, state) => MatchRoomScreen(matchId: state.pathParameters['id']!),
+      ),
     ],
   );
 }
