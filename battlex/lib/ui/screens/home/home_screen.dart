@@ -153,6 +153,7 @@ class _HomeScreenState extends State<HomeScreen> {
             _currentIndex = index;
             if (index == 1) context.go('/my-matches');
             if (index == 2) context.go('/leaderboard');
+            if (index == 3) context.go('/wallet');
             if (index == 4) context.go('/profile');
           });
         },

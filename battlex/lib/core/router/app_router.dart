@@ -12,6 +12,10 @@ import '../../ui/screens/my_matches/my_matches_screen.dart';
 import '../../ui/screens/leaderboard/leaderboard_screen.dart';
 import '../../ui/screens/profile/profile_screen.dart';
 import '../../ui/screens/profile/edit_profile_screen.dart';
+import '../../ui/screens/wallet/wallet_screen.dart';
+import '../../ui/screens/wallet/add_cash_screen.dart';
+import '../../ui/screens/wallet/withdraw_screen.dart';
+import '../../ui/screens/wallet/transaction_history_screen.dart';
 
 class AppRouter {
   static final router = GoRouter(
@@ -64,6 +68,22 @@ class AppRouter {
       GoRoute(
         path: '/profile/edit',
         builder: (context, state) => const EditProfileScreen(),
+      ),
+      GoRoute(
+        path: '/wallet',
+        builder: (context, state) => const WalletScreen(),
+      ),
+      GoRoute(
+        path: '/wallet/add-cash',
+        builder: (context, state) => const AddCashScreen(),
+      ),
+      GoRoute(
+        path: '/wallet/withdraw',
+        builder: (context, state) => const WithdrawScreen(),
+      ),
+      GoRoute(
+        path: '/wallet/transactions',
+        builder: (context, state) => const TransactionHistoryScreen(),
       ),
     ],
   );
