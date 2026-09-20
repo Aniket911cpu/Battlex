@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import '../../components/app_bar/battlex_app_bar.dart';
 import '../../components/bottom_nav_bar.dart';
 import '../../components/glass_container.dart';
@@ -6,19 +7,22 @@ import '../../components/buttons/primary_button.dart';
 import '../../../core/theme/app_colors.dart';
 import '../../../core/theme/app_text_styles.dart';
 import 'package:go_router/go_router.dart';
+import '../../../data/providers/wallet_provider.dart';
 
-class WalletScreen extends StatefulWidget {
+class WalletScreen extends ConsumerStatefulWidget {
   const WalletScreen({super.key});
 
   @override
-  State<WalletScreen> createState() => _WalletScreenState();
+  ConsumerState<WalletScreen> createState() => _WalletScreenState();
 }
 
-class _WalletScreenState extends State<WalletScreen> {
+class _WalletScreenState extends ConsumerState<WalletScreen> {
   final int _currentIndex = 3;
 
   @override
   Widget build(BuildContext context) {
+    final walletState = ref.watch(walletProvider);
+    
     return Scaffold(
       appBar: const BattleXAppBar(title: 'Wallet'),
       body: SingleChildScrollView(
@@ -33,7 +37,7 @@ class _WalletScreenState extends State<WalletScreen> {
                 borderRadius: BorderRadius.circular(16),
                 boxShadow: [
                   BoxShadow(
-                    color: AppColors.primaryGlow.withOpacity(0.15),
+                    color: AppColors.primaryGlow.withValues(alpha: 0.15),
                     blurRadius: 32,
                     spreadRadius: -8,
                   ),
@@ -44,7 +48,7 @@ class _WalletScreenState extends State<WalletScreen> {
                 children: [
                   Text('TOTAL BALANCE', style: AppTextStyles.labelSm.copyWith(color: AppColors.secondary)),
                   const SizedBox(height: 8),
-                  Text('₹2,450', style: AppTextStyles.statNumeric.copyWith(color: AppColors.onSurface, fontSize: 48)),
+                  Text('₹${walletState.balance.toInt()}', style: AppTextStyles.statNumeric.copyWith(color: AppColors.onSurface, fontSize: 48)),
                   const SizedBox(height: 4),
                   Row(
                     mainAxisAlignment: MainAxisAlignment.center,
@@ -88,9 +92,9 @@ class _WalletScreenState extends State<WalletScreen> {
             Container(
               padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
               decoration: BoxDecoration(
-                color: AppColors.successGreen.withOpacity(0.1),
+                color: AppColors.successGreen.withValues(alpha: 0.1),
                 borderRadius: BorderRadius.circular(8),
-                border: Border.all(color: AppColors.successGreen.withOpacity(0.3)),
+                border: Border.all(color: AppColors.successGreen.withValues(alpha: 0.3)),
               ),
               child: Row(
                 children: [
@@ -110,18 +114,18 @@ class _WalletScreenState extends State<WalletScreen> {
             ),
             const SizedBox(height: 24),
 
-            // Breakdown
+            // Breakdown (Mock split)
             Text('BALANCE BREAKDOWN', style: AppTextStyles.labelLg.copyWith(color: AppColors.onSurface)),
             const SizedBox(height: 12),
             GlassContainer(
               padding: const EdgeInsets.all(0),
               child: Column(
                 children: [
-                  _buildBreakdownRow('Play Money (Deposits)', '₹450', 'Unrestricted use for matches', Colors.transparent),
+                  _buildBreakdownRow('Play Money (Deposits)', '₹${(walletState.balance * 0.3).toInt()}', 'Unrestricted use for matches', Colors.transparent),
                   const Divider(color: AppColors.surfaceContainerLowest, height: 1),
-                  _buildBreakdownRow('Winnings', '₹1,500', 'Withdrawable to bank', AppColors.primaryContainer),
+                  _buildBreakdownRow('Winnings', '₹${(walletState.balance * 0.6).toInt()}', 'Withdrawable to bank', AppColors.primaryContainer),
                   const Divider(color: AppColors.surfaceContainerLowest, height: 1),
-                  _buildBreakdownRow('Bonus Cash', '₹500', 'Used in specific matches', AppColors.tertiary),
+                  _buildBreakdownRow('Bonus Cash', '₹${(walletState.balance * 0.1).toInt()}', 'Used in specific matches', AppColors.tertiary),
                 ],
               ),
             ),

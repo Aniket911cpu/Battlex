@@ -1,27 +1,31 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import '../../components/app_bar/battlex_app_bar.dart';
 import '../../components/glass_container.dart';
 import '../../components/buttons/primary_button.dart';
 import '../../../core/theme/app_colors.dart';
 import '../../../core/theme/app_text_styles.dart';
+import '../../../data/providers/wallet_provider.dart';
 
-class AddCashScreen extends StatefulWidget {
+class AddCashScreen extends ConsumerStatefulWidget {
   const AddCashScreen({super.key});
 
   @override
-  State<AddCashScreen> createState() => _AddCashScreenState();
+  ConsumerState<AddCashScreen> createState() => _AddCashScreenState();
 }
 
-class _AddCashScreenState extends State<AddCashScreen> {
+class _AddCashScreenState extends ConsumerState<AddCashScreen> {
   final TextEditingController _amountController = TextEditingController(text: '100');
   bool _isLoading = false;
 
   void _handlePay() async {
     setState(() => _isLoading = true);
-    await Future.delayed(const Duration(seconds: 1));
+    final amount = double.tryParse(_amountController.text) ?? 0;
+    if (amount > 0) {
+      await ref.read(walletProvider.notifier).addCash(amount);
+    }
     if (mounted) {
       setState(() => _isLoading = false);
-      // Logic for payment success
       Navigator.of(context).pop();
     }
   }

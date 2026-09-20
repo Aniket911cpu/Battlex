@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 import '../../components/cyber_grid_bg.dart';
 import '../../components/glass_container.dart';
@@ -6,25 +7,29 @@ import '../../components/buttons/primary_button.dart';
 import '../../../core/theme/app_colors.dart';
 import '../../../core/theme/app_text_styles.dart';
 
-class LoginScreen extends StatefulWidget {
+class LoginScreen extends ConsumerStatefulWidget {
   const LoginScreen({super.key});
 
   @override
-  State<LoginScreen> createState() => _LoginScreenState();
+  ConsumerState<LoginScreen> createState() => _LoginScreenState();
 }
 
-class _LoginScreenState extends State<LoginScreen> {
+class _LoginScreenState extends ConsumerState<LoginScreen> {
+  final TextEditingController _phoneController = TextEditingController();
   bool _obscurePassword = true;
   bool _rememberMe = true;
   bool _isLoading = false;
 
   void _handleLogin() async {
+    if (_phoneController.text.length < 10) return;
+    
     setState(() => _isLoading = true);
-    // Simulate network delay
-    await Future.delayed(const Duration(seconds: 2));
+    // Simulate OTP sent delay
+    await Future.delayed(const Duration(seconds: 1));
     if (mounted) {
       setState(() => _isLoading = false);
-      context.go('/home'); // Now routes to home correctly
+      // Pass phone number to OTP screen as extra if needed, or just push
+      context.push('/otp', extra: _phoneController.text);
     }
   }
 

@@ -1,9 +1,18 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:hive_flutter/hive_flutter.dart';
 import 'core/theme/app_theme.dart';
 import 'core/router/app_router.dart';
 
-void main() {
+void main() async {
+  WidgetsFlutterBinding.ensureInitialized();
+  
+  // Initialize Hive for local storage
+  await Hive.initFlutter();
+  await Hive.openBox('authBox');
+  await Hive.openBox('userBox');
+  await Hive.openBox('walletBox');
+  
   runApp(
     const ProviderScope(
       child: BattleXApp(),

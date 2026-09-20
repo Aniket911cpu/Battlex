@@ -1,21 +1,23 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 import '../../components/cyber_grid_bg.dart';
 import '../../components/glass_container.dart';
 import '../../components/buttons/primary_button.dart';
 import '../../../core/theme/app_colors.dart';
 import '../../../core/theme/app_text_styles.dart';
+import '../../../data/providers/auth_provider.dart';
 
-class OtpScreen extends StatefulWidget {
+class OtpScreen extends ConsumerStatefulWidget {
   const OtpScreen({super.key});
 
   @override
-  State<OtpScreen> createState() => _OtpScreenState();
+  ConsumerState<OtpScreen> createState() => _OtpScreenState();
 }
 
-class _OtpScreenState extends State<OtpScreen> {
-  final List<TextEditingController> _controllers = List.generate(6, (index) => TextEditingController());
-  final List<FocusNode> _focusNodes = List.generate(6, (index) => FocusNode());
+class _OtpScreenState extends ConsumerState<OtpScreen> {
+  final List<TextEditingController> _controllers = List.generate(4, (index) => TextEditingController());
+  final List<FocusNode> _focusNodes = List.generate(4, (index) => FocusNode());
   bool _isLoading = false;
 
   @override
@@ -29,12 +31,17 @@ class _OtpScreenState extends State<OtpScreen> {
     super.dispose();
   }
 
-  void _handleVerify() async {
+  void _verifyOtp() async {
     setState(() => _isLoading = true);
+    // Simulate network delay
     await Future.delayed(const Duration(seconds: 1));
+    
     if (mounted) {
+      // Use authProvider to login
+      await ref.read(authProvider.notifier).login('+91 9876543210'); // Mock phone
+      
       setState(() => _isLoading = false);
-      context.push('/kyc');
+      context.go('/home'); // Go to home on success
     }
   }
 

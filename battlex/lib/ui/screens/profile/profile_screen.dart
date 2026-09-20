@@ -1,23 +1,30 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import '../../components/app_bar/battlex_app_bar.dart';
 import '../../components/bottom_nav_bar.dart';
 import '../../components/glass_container.dart';
 import '../../../core/theme/app_colors.dart';
 import '../../../core/theme/app_text_styles.dart';
 import 'package:go_router/go_router.dart';
+import '../../../data/providers/user_provider.dart';
 
-class ProfileScreen extends StatefulWidget {
+class ProfileScreen extends ConsumerStatefulWidget {
   const ProfileScreen({super.key});
 
   @override
-  State<ProfileScreen> createState() => _ProfileScreenState();
+  ConsumerState<ProfileScreen> createState() => _ProfileScreenState();
 }
 
-class _ProfileScreenState extends State<ProfileScreen> {
+class _ProfileScreenState extends ConsumerState<ProfileScreen> {
   final int _currentIndex = 4;
 
   @override
   Widget build(BuildContext context) {
+    final user = ref.watch(userProvider);
+    if (user == null) {
+      return const Scaffold(body: Center(child: CircularProgressIndicator()));
+    }
+
     return Scaffold(
       appBar: const BattleXAppBar(title: 'Gamer Profile'),
       body: SingleChildScrollView(
@@ -57,22 +64,23 @@ class _ProfileScreenState extends State<ProfileScreen> {
                     ],
                   ),
                   const SizedBox(height: 16),
-                  Text('ShadowNinja', style: AppTextStyles.headlineMd.copyWith(color: AppColors.onSurface)),
+                  Text(user.username, style: AppTextStyles.headlineMd.copyWith(color: AppColors.onSurface)),
                   const SizedBox(height: 4),
                   Row(
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: [
-                      Text('ID: BX-948291', style: AppTextStyles.bodyMd.copyWith(color: AppColors.secondary)),
+                      Text('ID: ${user.id}', style: AppTextStyles.bodyMd.copyWith(color: AppColors.secondary)),
                       const SizedBox(width: 8),
-                      Container(
-                        padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 2),
-                        decoration: BoxDecoration(
-                          color: AppColors.tertiaryContainer.withOpacity(0.2),
-                          borderRadius: BorderRadius.circular(4),
-                          border: Border.all(color: AppColors.tertiaryContainer),
+                      if (user.vipTier != 'NONE')
+                        Container(
+                          padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 2),
+                          decoration: BoxDecoration(
+                            color: AppColors.tertiaryContainer.withOpacity(0.2),
+                            borderRadius: BorderRadius.circular(4),
+                            border: Border.all(color: AppColors.tertiaryContainer),
+                          ),
+                          child: Text('${user.vipTier} VIP', style: AppTextStyles.labelSm.copyWith(color: AppColors.tertiary)),
                         ),
-                        child: Text('DIAMOND VIP', style: AppTextStyles.labelSm.copyWith(color: AppColors.tertiary)),
-                      ),
                     ],
                   ),
                   const SizedBox(height: 16),
@@ -112,11 +120,11 @@ class _ProfileScreenState extends State<ProfileScreen> {
               padding: const EdgeInsets.all(0),
               child: Column(
                 children: [
-                  _buildGameIdRow('BGMI ID', '51239847192', true),
+                  _buildGameIdRow('BGMI ID', user.bgmiId ?? 'Not Linked', user.bgmiId != null),
                   const Divider(color: AppColors.surfaceContainerLowest, height: 1),
-                  _buildGameIdRow('Free Fire ID', 'Not Linked', false),
+                  _buildGameIdRow('Free Fire ID', user.freeFireId ?? 'Not Linked', user.freeFireId != null),
                   const Divider(color: AppColors.surfaceContainerLowest, height: 1),
-                  _buildGameIdRow('Ludo ID', 'Shadow_Ludo', true),
+                  _buildGameIdRow('Ludo ID', user.ludoId ?? 'Not Linked', user.ludoId != null),
                 ],
               ),
             ),
