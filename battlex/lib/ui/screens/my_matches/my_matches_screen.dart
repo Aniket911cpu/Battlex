@@ -67,7 +67,8 @@ class _MyMatchesScreenState extends State<MyMatchesScreen> with SingleTickerProv
         currentIndex: _currentIndex,
         onTap: (index) {
           if (index == 0) context.go('/home');
-          // Update routing appropriately
+          if (index == 2) context.go('/leaderboard');
+          if (index == 4) context.go('/profile');
         },
       ),
     );

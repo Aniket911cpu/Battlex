@@ -58,6 +58,7 @@ class _LeaderboardScreenState extends State<LeaderboardScreen> {
         onTap: (index) {
           if (index == 0) context.go('/home');
           if (index == 1) context.go('/my-matches');
+          if (index == 4) context.go('/profile');
         },
       ),
     );

@@ -10,6 +10,8 @@ import '../../ui/screens/home/home_screen.dart';
 import '../../ui/screens/match/match_room_screen.dart';
 import '../../ui/screens/my_matches/my_matches_screen.dart';
 import '../../ui/screens/leaderboard/leaderboard_screen.dart';
+import '../../ui/screens/profile/profile_screen.dart';
+import '../../ui/screens/profile/edit_profile_screen.dart';
 
 class AppRouter {
   static final router = GoRouter(
@@ -54,6 +56,14 @@ class AppRouter {
       GoRoute(
         path: '/leaderboard',
         builder: (context, state) => const LeaderboardScreen(),
+      ),
+      GoRoute(
+        path: '/profile',
+        builder: (context, state) => const ProfileScreen(),
+      ),
+      GoRoute(
+        path: '/profile/edit',
+        builder: (context, state) => const EditProfileScreen(),
       ),
     ],
   );
