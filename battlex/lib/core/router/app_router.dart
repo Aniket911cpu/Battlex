@@ -16,6 +16,11 @@ import '../../ui/screens/wallet/wallet_screen.dart';
 import '../../ui/screens/wallet/add_cash_screen.dart';
 import '../../ui/screens/wallet/withdraw_screen.dart';
 import '../../ui/screens/wallet/transaction_history_screen.dart';
+import '../../ui/screens/membership/membership_screen.dart';
+import '../../ui/screens/refer/refer_screen.dart';
+import '../../ui/screens/notifications/notifications_screen.dart';
+import '../../ui/screens/settings/settings_screen.dart';
+import '../../ui/screens/labs/labs_screen.dart';
 
 class AppRouter {
   static final router = GoRouter(
@@ -84,6 +89,26 @@ class AppRouter {
       GoRoute(
         path: '/wallet/transactions',
         builder: (context, state) => const TransactionHistoryScreen(),
+      ),
+      GoRoute(
+        path: '/membership',
+        builder: (context, state) => const MembershipScreen(),
+      ),
+      GoRoute(
+        path: '/refer',
+        builder: (context, state) => const ReferScreen(),
+      ),
+      GoRoute(
+        path: '/notifications',
+        builder: (context, state) => const NotificationsScreen(),
+      ),
+      GoRoute(
+        path: '/settings',
+        builder: (context, state) => const SettingsScreen(),
+      ),
+      GoRoute(
+        path: '/labs',
+        builder: (context, state) => const LabsScreen(),
       ),
     ],
   );

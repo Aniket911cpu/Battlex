@@ -69,10 +69,10 @@ class _HomeScreenState extends State<HomeScreen> {
                     child: Row(
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       children: [
-                        _buildHubAction(Icons.emoji_events, 'My Stats'),
-                        _buildHubAction(Icons.group_add, 'Refer'),
-                        _buildHubAction(Icons.diamond, 'VIP Pass'),
-                        _buildHubAction(Icons.support_agent, 'Support'),
+                        _buildHubAction(Icons.science, 'Labs', () => context.push('/labs')),
+                        _buildHubAction(Icons.group_add, 'Refer', () => context.push('/refer')),
+                        _buildHubAction(Icons.diamond, 'VIP Pass', () => context.push('/membership')),
+                        _buildHubAction(Icons.support_agent, 'Support', () => context.push('/settings')),
                       ],
                     ),
                   ),
@@ -161,22 +161,25 @@ class _HomeScreenState extends State<HomeScreen> {
     );
   }
 
-  Widget _buildHubAction(IconData icon, String label) {
-    return Column(
-      children: [
-        Container(
-          width: 56,
-          height: 56,
-          decoration: BoxDecoration(
-            color: AppColors.surfaceContainerHigh,
-            shape: BoxShape.circle,
-            border: Border.all(color: AppColors.surfaceContainerHighest),
+  Widget _buildHubAction(IconData icon, String label, VoidCallback onTap) {
+    return GestureDetector(
+      onTap: onTap,
+      child: Column(
+        children: [
+          Container(
+            width: 56,
+            height: 56,
+            decoration: BoxDecoration(
+              color: AppColors.surfaceContainerHigh,
+              shape: BoxShape.circle,
+              border: Border.all(color: AppColors.surfaceContainerHighest),
+            ),
+            child: Icon(icon, color: AppColors.primaryContainer, size: 28),
           ),
-          child: Icon(icon, color: AppColors.primaryContainer, size: 28),
-        ),
-        const SizedBox(height: 8),
-        Text(label, style: AppTextStyles.labelSm.copyWith(color: AppColors.onSurface)),
-      ],
+          const SizedBox(height: 8),
+          Text(label, style: AppTextStyles.labelSm.copyWith(color: AppColors.onSurface)),
+        ],
+      ),
     );
   }
 

@@ -64,7 +64,7 @@ class BattleXAppBar extends StatelessWidget implements PreferredSizeWidget {
             smallSize: 8,
             child: Icon(Icons.notifications_outlined, color: AppColors.onSurface),
           ),
-          onPressed: () {},
+          onPressed: () => GoRouter.of(context).push('/notifications'),
         ),
         
         // Avatar
