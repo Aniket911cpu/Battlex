@@ -1,7 +1,6 @@
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import '../models/match_model.dart';
 import 'wallet_provider.dart';
-import 'package:flutter/material.dart';
 
 final matchProvider = StateNotifierProvider<MatchNotifier, List<MatchModel>>((ref) {
   return MatchNotifier(ref);
@@ -34,7 +33,7 @@ class MatchNotifier extends StateNotifier<List<MatchModel>> {
         prizePool: 2000,
         entryFee: 20,
         totalSpots: 48,
-        filledSpots: 48, // Full
+        filledSpots: 48,
       ),
       MatchModel(
         id: 'M3',
@@ -46,37 +45,45 @@ class MatchNotifier extends StateNotifier<List<MatchModel>> {
         totalSpots: 32,
         filledSpots: 12,
       ),
+      MatchModel(
+        id: 'M4',
+        title: 'Ludo King Challenge',
+        game: 'Ludo',
+        time: 'Today, 08:00 PM',
+        prizePool: 500,
+        entryFee: 10,
+        totalSpots: 10,
+        filledSpots: 6,
+      ),
     ];
   }
 
-  Future<bool> joinMatch(String matchId, BuildContext context) async {
+  /// Returns true if join succeeded, false if insufficient balance or match full.
+  Future<bool> joinMatch(String matchId) async {
     final matchIndex = state.indexWhere((m) => m.id == matchId);
     if (matchIndex == -1) return false;
 
     final match = state[matchIndex];
-    if (match.isJoined) return true; // Already joined
-    if (match.filledSpots >= match.totalSpots) return false; // Full
+    if (match.isJoined) return true;
+    if (match.filledSpots >= match.totalSpots) return false;
 
     final walletNotifier = ref.read(walletProvider.notifier);
-    
-    // Attempt to deduct entry fee
     final success = await walletNotifier.deductCash(
       match.entryFee.toDouble(),
       'Entry Fee - ${match.title}',
     );
 
     if (success) {
-      final newMatch = match.copyWith(
-        filledSpots: match.filledSpots + 1,
-        isJoined: true,
-      );
       state = [
         for (int i = 0; i < state.length; i++)
-          if (i == matchIndex) newMatch else state[i]
+          if (i == matchIndex)
+            match.copyWith(filledSpots: match.filledSpots + 1, isJoined: true)
+          else
+            state[i]
       ];
       return true;
     }
-    
-    return false; // Insufficient funds
+
+    return false;
   }
 }

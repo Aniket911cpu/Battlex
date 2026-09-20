@@ -16,32 +16,33 @@ class OtpScreen extends ConsumerStatefulWidget {
 }
 
 class _OtpScreenState extends ConsumerState<OtpScreen> {
-  final List<TextEditingController> _controllers = List.generate(4, (index) => TextEditingController());
-  final List<FocusNode> _focusNodes = List.generate(4, (index) => FocusNode());
+  final int _otpLength = 6;
+  late final List<TextEditingController> _controllers;
+  late final List<FocusNode> _focusNodes;
   bool _isLoading = false;
 
   @override
+  void initState() {
+    super.initState();
+    _controllers = List.generate(_otpLength, (index) => TextEditingController());
+    _focusNodes = List.generate(_otpLength, (index) => FocusNode());
+  }
+
+  @override
   void dispose() {
-    for (var controller in _controllers) {
-      controller.dispose();
-    }
-    for (var node in _focusNodes) {
-      node.dispose();
-    }
+    for (var c in _controllers) { c.dispose(); }
+    for (var f in _focusNodes) { f.dispose(); }
     super.dispose();
   }
 
   void _verifyOtp() async {
+    if (_isLoading) return;
     setState(() => _isLoading = true);
-    // Simulate network delay
     await Future.delayed(const Duration(seconds: 1));
-    
     if (mounted) {
-      // Use authProvider to login
-      await ref.read(authProvider.notifier).login('+91 9876543210'); // Mock phone
-      
+      await ref.read(authProvider.notifier).login('+91 9876543210');
       setState(() => _isLoading = false);
-      context.go('/home'); // Go to home on success
+      context.go('/home');
     }
   }
 
@@ -64,18 +65,19 @@ class _OtpScreenState extends ConsumerState<OtpScreen> {
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.stretch,
               children: [
-                Text('Verification', style: AppTextStyles.headlineLg.copyWith(color: AppColors.onSurface)),
+                Text('Verification',
+                    style: AppTextStyles.headlineLg.copyWith(color: AppColors.onSurface)),
                 const SizedBox(height: 8),
-                Text('We sent a 6-digit code to player@battlex.pro', style: AppTextStyles.bodyMd.copyWith(color: AppColors.secondary)),
+                Text('We sent a 6-digit code to your mobile number',
+                    style: AppTextStyles.bodyMd.copyWith(color: AppColors.secondary)),
                 const SizedBox(height: 48),
-                
                 GlassContainer(
                   padding: const EdgeInsets.all(24),
                   child: Column(
                     children: [
                       Row(
                         mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                        children: List.generate(6, (index) {
+                        children: List.generate(_otpLength, (index) {
                           return SizedBox(
                             width: 44,
                             child: TextField(
@@ -84,7 +86,8 @@ class _OtpScreenState extends ConsumerState<OtpScreen> {
                               textAlign: TextAlign.center,
                               keyboardType: TextInputType.number,
                               maxLength: 1,
-                              style: AppTextStyles.headlineMd.copyWith(color: AppColors.onSurface),
+                              style: AppTextStyles.headlineMd
+                                  .copyWith(color: AppColors.onSurface),
                               decoration: InputDecoration(
                                 counterText: '',
                                 filled: true,
@@ -95,14 +98,18 @@ class _OtpScreenState extends ConsumerState<OtpScreen> {
                                 ),
                                 focusedBorder: OutlineInputBorder(
                                   borderRadius: BorderRadius.circular(8),
-                                  borderSide: const BorderSide(color: AppColors.primaryContainer),
+                                  borderSide: const BorderSide(
+                                      color: AppColors.primaryContainer),
                                 ),
                               ),
                               onChanged: (value) {
-                                if (value.isNotEmpty && index < 5) {
+                                if (value.isNotEmpty && index < _otpLength - 1) {
                                   _focusNodes[index + 1].requestFocus();
                                 } else if (value.isEmpty && index > 0) {
                                   _focusNodes[index - 1].requestFocus();
+                                }
+                                if (index == _otpLength - 1 && value.isNotEmpty) {
+                                  _verifyOtp();
                                 }
                               },
                             ),
@@ -113,12 +120,14 @@ class _OtpScreenState extends ConsumerState<OtpScreen> {
                       PrimaryButton(
                         text: 'VERIFY',
                         isLoading: _isLoading,
-                        onPressed: _handleVerify,
+                        onPressed: _verifyOtp,
                       ),
                       const SizedBox(height: 24),
                       TextButton(
                         onPressed: () {},
-                        child: Text('RESEND CODE (0:45)', style: AppTextStyles.labelMd.copyWith(color: AppColors.primaryContainer)),
+                        child: Text('RESEND CODE (0:45)',
+                            style: AppTextStyles.labelMd
+                                .copyWith(color: AppColors.primaryContainer)),
                       ),
                     ],
                   ),

@@ -18,31 +18,22 @@ class _JoinConfirmationSheetState extends ConsumerState<JoinConfirmationSheet> {
 
   void _handleConfirm() async {
     setState(() => _isLoading = true);
-    
-    // In a real app we'd pass matchId, hardcoding M1 for demo
-    final success = await ref.read(matchProvider.notifier).joinMatch('M1', context);
-    
+
+    final success = await ref.read(matchProvider.notifier).joinMatch('M1');
+
     if (mounted) {
       setState(() => _isLoading = false);
-      Navigator.pop(context); // Close sheet
-      
-      if (success) {
-        // Show success snackbar
-        ScaffoldMessenger.of(context).showSnackBar(
-          const SnackBar(
-            content: Text('Successfully joined the match!'),
-            backgroundColor: AppColors.successGreen,
-          ),
-        );
-      } else {
-        // Show error (insufficient balance or full)
-        ScaffoldMessenger.of(context).showSnackBar(
-          const SnackBar(
-            content: Text('Failed to join. Check balance or match capacity.'),
-            backgroundColor: AppColors.error,
-          ),
-        );
-      }
+      Navigator.pop(context);
+
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(
+          content: Text(success
+              ? 'Successfully joined the match!'
+              : 'Failed to join. Check your balance or match capacity.'),
+          backgroundColor:
+              success ? AppColors.successGreen : AppColors.error,
+        ),
+      );
     }
   }
 
