@@ -73,7 +73,7 @@ class _SplashScreenState extends State<SplashScreen> with SingleTickerProviderSt
                           borderRadius: BorderRadius.circular(24),
                           boxShadow: [
                             BoxShadow(
-                              color: AppColors.primaryGlow.withOpacity(0.6),
+                              color: AppColors.primaryGlow.withValues(alpha: 0.6),
                               blurRadius: 32,
                               spreadRadius: 8,
                             ),
@@ -117,3 +117,4 @@ class _SplashScreenState extends State<SplashScreen> with SingleTickerProviderSt
     );
   }
 }
+

@@ -180,3 +180,4 @@ class _WalletScreenState extends ConsumerState<WalletScreen> {
     );
   }
 }
+

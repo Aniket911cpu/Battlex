@@ -44,3 +44,4 @@ class UserNotifier extends StateNotifier<UserModel?> {
     _saveUser(updatedUser);
   }
 }
+

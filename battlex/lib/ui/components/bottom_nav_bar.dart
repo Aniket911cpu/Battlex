@@ -110,7 +110,7 @@ class _NavItem extends StatelessWidget {
               boxShadow: isSelected
                   ? [
                       BoxShadow(
-                        color: AppColors.primaryGlow.withOpacity(0.8),
+                        color: AppColors.primaryGlow.withValues(alpha: 0.8),
                         blurRadius: 4,
                       )
                     ]
@@ -122,3 +122,4 @@ class _NavItem extends StatelessWidget {
     );
   }
 }
+

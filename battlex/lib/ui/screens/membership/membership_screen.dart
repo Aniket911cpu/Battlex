@@ -22,7 +22,7 @@ class MembershipScreen extends StatelessWidget {
               padding: const EdgeInsets.all(24),
               decoration: BoxDecoration(
                 gradient: LinearGradient(
-                  colors: [AppColors.tertiaryContainer.withOpacity(0.8), AppColors.surfaceContainerHigh],
+                  colors: [AppColors.tertiaryContainer.withValues(alpha: 0.8), AppColors.surfaceContainerHigh],
                   begin: Alignment.topLeft,
                   end: Alignment.bottomRight,
                 ),
@@ -30,7 +30,7 @@ class MembershipScreen extends StatelessWidget {
                 border: Border.all(color: AppColors.tertiary),
                 boxShadow: [
                   BoxShadow(
-                    color: AppColors.tertiary.withOpacity(0.2),
+                    color: AppColors.tertiary.withValues(alpha: 0.2),
                     blurRadius: 24,
                   ),
                 ],
@@ -126,3 +126,4 @@ class MembershipScreen extends StatelessWidget {
     );
   }
 }
+

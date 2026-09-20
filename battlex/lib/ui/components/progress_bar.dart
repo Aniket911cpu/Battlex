@@ -55,7 +55,7 @@ class GlowProgressBar extends StatelessWidget {
                   borderRadius: BorderRadius.circular(4),
                   boxShadow: [
                     BoxShadow(
-                      color: AppColors.primaryGlow.withOpacity(0.7),
+                      color: AppColors.primaryGlow.withValues(alpha: 0.7),
                       blurRadius: 8,
                     ),
                   ],
@@ -68,3 +68,4 @@ class GlowProgressBar extends StatelessWidget {
     );
   }
 }
+

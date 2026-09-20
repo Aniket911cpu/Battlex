@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:go_router/go_router.dart';
 import '../../../core/theme/app_colors.dart';
 import '../../../core/theme/app_text_styles.dart';
 
@@ -18,7 +19,7 @@ class BattleXAppBar extends StatelessWidget implements PreferredSizeWidget {
   @override
   Widget build(BuildContext context) {
     return AppBar(
-      backgroundColor: AppColors.surfaceContainerLowest.withOpacity(0.95),
+      backgroundColor: AppColors.surfaceContainerLowest.withValues(alpha: 0.95),
       elevation: 0,
       centerTitle: false,
       leading: showBackButton 
@@ -44,7 +45,7 @@ class BattleXAppBar extends StatelessWidget implements PreferredSizeWidget {
           decoration: BoxDecoration(
             color: AppColors.surfaceContainerHigh,
             borderRadius: BorderRadius.circular(16),
-            border: Border.all(color: AppColors.primaryContainer.withOpacity(0.3)),
+            border: Border.all(color: AppColors.primaryContainer.withValues(alpha: 0.3)),
           ),
           child: Row(
             children: [
@@ -80,3 +81,4 @@ class BattleXAppBar extends StatelessWidget implements PreferredSizeWidget {
     );
   }
 }
+

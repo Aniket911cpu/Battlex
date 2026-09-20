@@ -42,7 +42,7 @@ class NotificationsScreen extends StatelessWidget {
                 final bool isUnread = n['unread'] as bool;
                 
                 return Container(
-                  color: isUnread ? AppColors.primaryContainer.withOpacity(0.05) : Colors.transparent,
+                  color: isUnread ? AppColors.primaryContainer.withValues(alpha: 0.05) : Colors.transparent,
                   padding: const EdgeInsets.all(16),
                   child: Row(
                     crossAxisAlignment: CrossAxisAlignment.start,
@@ -76,7 +76,7 @@ class NotificationsScreen extends StatelessWidget {
                           decoration: BoxDecoration(
                             color: AppColors.primaryContainer,
                             shape: BoxShape.circle,
-                            boxShadow: [BoxShadow(color: AppColors.primaryGlow.withOpacity(0.5), blurRadius: 4)],
+                            boxShadow: [BoxShadow(color: AppColors.primaryGlow.withValues(alpha: 0.5), blurRadius: 4)],
                           ),
                         ),
                     ],
@@ -95,7 +95,7 @@ class NotificationsScreen extends StatelessWidget {
       margin: const EdgeInsets.only(right: 8),
       padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
       decoration: BoxDecoration(
-        color: isSelected ? AppColors.primaryContainer.withOpacity(0.2) : AppColors.surfaceContainerHigh,
+        color: isSelected ? AppColors.primaryContainer.withValues(alpha: 0.2) : AppColors.surfaceContainerHigh,
         borderRadius: BorderRadius.circular(16),
         border: Border.all(color: isSelected ? AppColors.primaryContainer : AppColors.surfaceContainerHighest),
       ),
@@ -106,3 +106,4 @@ class NotificationsScreen extends StatelessWidget {
     );
   }
 }
+

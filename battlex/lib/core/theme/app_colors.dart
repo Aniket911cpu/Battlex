@@ -49,3 +49,4 @@ class AppColors {
   // Specific UI Glows
   static const Color primaryGlow = Color(0xFFFF5708);
 }
+

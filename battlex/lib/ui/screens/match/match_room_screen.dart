@@ -167,9 +167,9 @@ class MatchRoomScreen extends StatelessWidget {
       padding: const EdgeInsets.symmetric(vertical: 12, horizontal: 16),
       margin: const EdgeInsets.only(bottom: 8),
       decoration: BoxDecoration(
-        color: isFirst ? AppColors.primaryContainer.withOpacity(0.1) : AppColors.surfaceContainerHigh,
+        color: isFirst ? AppColors.primaryContainer.withValues(alpha: 0.1) : AppColors.surfaceContainerHigh,
         borderRadius: BorderRadius.circular(8),
-        border: isFirst ? Border.all(color: AppColors.primaryContainer.withOpacity(0.3)) : null,
+        border: isFirst ? Border.all(color: AppColors.primaryContainer.withValues(alpha: 0.3)) : null,
       ),
       child: Row(
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -181,3 +181,4 @@ class MatchRoomScreen extends StatelessWidget {
     );
   }
 }
+

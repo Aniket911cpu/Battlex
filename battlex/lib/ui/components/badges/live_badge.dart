@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import '../../core/theme/app_colors.dart';
+import '../../../core/theme/app_colors.dart';
 
 class LiveBadge extends StatefulWidget {
   const LiveBadge({super.key});
@@ -36,7 +36,7 @@ class _LiveBadgeState extends State<LiveBadge> with SingleTickerProviderStateMix
     return Container(
       padding: const EdgeInsets.symmetric(horizontal: 6, vertical: 2),
       decoration: BoxDecoration(
-        color: AppColors.errorContainer.withOpacity(0.15),
+        color: AppColors.errorContainer.withValues(alpha: 0.15),
         border: Border.all(color: AppColors.error),
         borderRadius: BorderRadius.circular(4),
       ),
@@ -49,11 +49,11 @@ class _LiveBadgeState extends State<LiveBadge> with SingleTickerProviderStateMix
               width: 6,
               height: 6,
               decoration: BoxDecoration(
-                color: AppColors.error.withOpacity(_animation.value),
+                color: AppColors.error.withValues(alpha: _animation.value),
                 shape: BoxShape.circle,
                 boxShadow: [
                   BoxShadow(
-                    color: AppColors.error.withOpacity(_animation.value * 0.5),
+                    color: AppColors.error.withValues(alpha: _animation.value * 0.5),
                     blurRadius: 4,
                   ),
                 ],
@@ -72,3 +72,4 @@ class _LiveBadgeState extends State<LiveBadge> with SingleTickerProviderStateMix
     );
   }
 }
+

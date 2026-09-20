@@ -88,7 +88,7 @@ class ReferScreen extends StatelessWidget {
             width: 40,
             height: 40,
             decoration: BoxDecoration(
-              color: AppColors.primaryContainer.withOpacity(0.1),
+              color: AppColors.primaryContainer.withValues(alpha: 0.1),
               shape: BoxShape.circle,
               border: Border.all(color: AppColors.primaryContainer),
             ),
@@ -111,3 +111,4 @@ class ReferScreen extends StatelessWidget {
     );
   }
 }
+

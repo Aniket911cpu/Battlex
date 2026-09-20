@@ -180,3 +180,4 @@ class _JoinConfirmationSheetState extends ConsumerState<JoinConfirmationSheet> {
     );
   }
 }
+

@@ -38,7 +38,7 @@ class _WinTickerState extends State<WinTicker> with SingleTickerProviderStateMix
   Widget build(BuildContext context) {
     return Container(
       height: 32,
-      color: AppColors.primaryContainer.withOpacity(0.1),
+      color: AppColors.primaryContainer.withValues(alpha: 0.1),
       child: Row(
         children: [
           // Live Dot
@@ -59,7 +59,7 @@ class _WinTickerState extends State<WinTicker> with SingleTickerProviderStateMix
                     shape: BoxShape.circle,
                     boxShadow: [
                       BoxShadow(
-                        color: AppColors.primaryGlow.withOpacity(0.8),
+                        color: AppColors.primaryGlow.withValues(alpha: 0.8),
                         blurRadius: 6,
                       ),
                     ],
@@ -99,3 +99,4 @@ class _WinTickerState extends State<WinTicker> with SingleTickerProviderStateMix
     );
   }
 }
+

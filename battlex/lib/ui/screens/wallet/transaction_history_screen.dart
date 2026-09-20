@@ -104,7 +104,7 @@ class TransactionHistoryScreen extends ConsumerWidget {
       margin: const EdgeInsets.only(right: 8),
       padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
       decoration: BoxDecoration(
-        color: isSelected ? AppColors.primaryContainer.withOpacity(0.2) : AppColors.surfaceContainerHigh,
+        color: isSelected ? AppColors.primaryContainer.withValues(alpha: 0.2) : AppColors.surfaceContainerHigh,
         borderRadius: BorderRadius.circular(16),
         border: Border.all(color: isSelected ? AppColors.primaryContainer : AppColors.surfaceContainerHighest),
       ),
@@ -115,3 +115,4 @@ class TransactionHistoryScreen extends ConsumerWidget {
     );
   }
 }
+

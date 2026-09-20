@@ -155,7 +155,7 @@ class _WithdrawScreenState extends ConsumerState<WithdrawScreen> {
   Widget _buildWithdrawMethod(String title, String subtitle, IconData icon, bool isSelected) {
     return Container(
       decoration: BoxDecoration(
-        color: isSelected ? AppColors.errorContainer.withOpacity(0.1) : AppColors.surfaceContainerHigh,
+        color: isSelected ? AppColors.errorContainer.withValues(alpha: 0.1) : AppColors.surfaceContainerHigh,
         borderRadius: BorderRadius.circular(12),
         border: Border.all(color: isSelected ? AppColors.errorContainer : AppColors.surfaceContainerHighest),
       ),
@@ -170,3 +170,4 @@ class _WithdrawScreenState extends ConsumerState<WithdrawScreen> {
     );
   }
 }
+

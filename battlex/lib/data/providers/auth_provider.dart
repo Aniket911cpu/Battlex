@@ -32,3 +32,4 @@ class AuthNotifier extends StateNotifier<bool> {
     state = false;
   }
 }
+

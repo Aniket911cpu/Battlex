@@ -22,9 +22,9 @@ class CyberGridBg extends StatelessWidget {
             height: 300,
             decoration: BoxDecoration(
               shape: BoxShape.circle,
-              color: AppColors.primaryContainer.withOpacity(0.15),
+              color: AppColors.primaryContainer.withValues(alpha: 0.15),
               boxShadow: [
-                BoxShadow(color: AppColors.primaryContainer.withOpacity(0.15), blurRadius: 100),
+                BoxShadow(color: AppColors.primaryContainer.withValues(alpha: 0.15), blurRadius: 100),
               ],
             ),
           ),
@@ -48,12 +48,12 @@ class _GridPainter extends CustomPainter {
   @override
   void paint(Canvas canvas, Size size) {
     final paint = Paint()
-      ..color = Colors.white.withOpacity(0.05)
+      ..color = Colors.white.withValues(alpha: 0.05)
       ..strokeWidth = 1
       ..style = PaintingStyle.stroke;
       
     final dotPaint = Paint()
-      ..color = AppColors.primaryContainer.withOpacity(0.3)
+      ..color = AppColors.primaryContainer.withValues(alpha: 0.3)
       ..style = PaintingStyle.fill;
 
     const double spacing = 32.0;
@@ -75,3 +75,4 @@ class _GridPainter extends CustomPainter {
   @override
   bool shouldRepaint(covariant CustomPainter oldDelegate) => false;
 }
+

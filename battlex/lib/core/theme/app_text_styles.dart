@@ -38,10 +38,23 @@ class AppTextStyles {
     letterSpacing: -0.01 * 20,
   );
 
+  static final TextStyle titleLg = GoogleFonts.spaceGrotesk(
+    fontSize: 22,
+    fontWeight: FontWeight.w700,
+    height: 28 / 22,
+    letterSpacing: -0.01 * 22,
+  );
+
   static final TextStyle titleMd = GoogleFonts.spaceGrotesk(
     fontSize: 18,
     fontWeight: FontWeight.w600,
     height: 24 / 18,
+  );
+
+  static final TextStyle titleSm = GoogleFonts.spaceGrotesk(
+    fontSize: 16,
+    fontWeight: FontWeight.w600,
+    height: 20 / 16,
   );
 
   // Body (Inter)
@@ -94,3 +107,4 @@ class AppTextStyles {
     letterSpacing: -0.02 * 32,
   );
 }
+

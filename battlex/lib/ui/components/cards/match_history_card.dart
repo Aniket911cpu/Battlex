@@ -72,7 +72,7 @@ class MatchHistoryCard extends StatelessWidget {
                         padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
                         decoration: BoxDecoration(
                           color: isLive 
-                              ? AppColors.errorContainer.withOpacity(0.2) 
+                              ? AppColors.errorContainer.withValues(alpha: 0.2) 
                               : AppColors.surfaceContainerHigh,
                           borderRadius: BorderRadius.circular(4),
                           border: isLive ? Border.all(color: AppColors.error) : null,
@@ -154,3 +154,4 @@ class MatchHistoryCard extends StatelessWidget {
     );
   }
 }
+

@@ -158,7 +158,7 @@ class _AddCashScreenState extends ConsumerState<AddCashScreen> {
   Widget _buildPaymentMethod(String title, String subtitle, IconData icon, bool isSelected) {
     return Container(
       decoration: BoxDecoration(
-        color: isSelected ? AppColors.primaryContainer.withOpacity(0.1) : AppColors.surfaceContainerHigh,
+        color: isSelected ? AppColors.primaryContainer.withValues(alpha: 0.1) : AppColors.surfaceContainerHigh,
         borderRadius: BorderRadius.circular(12),
         border: Border.all(color: isSelected ? AppColors.primaryContainer : AppColors.surfaceContainerHighest),
       ),
@@ -180,3 +180,4 @@ class _AddCashScreenState extends ConsumerState<AddCashScreen> {
     );
   }
 }
+

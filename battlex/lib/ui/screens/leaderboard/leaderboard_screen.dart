@@ -25,7 +25,7 @@ class _LeaderboardScreenState extends State<LeaderboardScreen> {
           // Banner
           Container(
             padding: const EdgeInsets.symmetric(vertical: 12),
-            color: AppColors.primaryContainer.withOpacity(0.1),
+            color: AppColors.primaryContainer.withValues(alpha: 0.1),
             child: Row(
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
@@ -94,7 +94,7 @@ class _LeaderboardScreenState extends State<LeaderboardScreen> {
             shape: BoxShape.circle,
             color: AppColors.surfaceContainerHigh,
             border: Border.all(color: color, width: isFirst ? 3 : 2),
-            boxShadow: isFirst ? [BoxShadow(color: color.withOpacity(0.4), blurRadius: 16)] : null,
+            boxShadow: isFirst ? [BoxShadow(color: color.withValues(alpha: 0.4), blurRadius: 16)] : null,
           ),
           child: const Icon(Icons.person, color: AppColors.secondary), // Avatar placeholder
         ),
@@ -112,7 +112,7 @@ class _LeaderboardScreenState extends State<LeaderboardScreen> {
           ),
           alignment: Alignment.topCenter,
           padding: const EdgeInsets.only(top: 8),
-          child: Text('#$rank', style: AppTextStyles.headlineMd.copyWith(color: color.withOpacity(0.5))),
+          child: Text('#$rank', style: AppTextStyles.headlineMd.copyWith(color: color.withValues(alpha: 0.5))),
         ),
       ],
     );
@@ -129,7 +129,7 @@ class _LeaderboardScreenState extends State<LeaderboardScreen> {
         final isMe = index == 3; // Simulate current user at rank 7
 
         return Container(
-          color: isMe ? AppColors.primaryContainer.withOpacity(0.1) : AppColors.surfaceContainerLowest,
+          color: isMe ? AppColors.primaryContainer.withValues(alpha: 0.1) : AppColors.surfaceContainerLowest,
           padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
           child: Row(
             children: [
@@ -166,3 +166,4 @@ class _LeaderboardScreenState extends State<LeaderboardScreen> {
     );
   }
 }
+

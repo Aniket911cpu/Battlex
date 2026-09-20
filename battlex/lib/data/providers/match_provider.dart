@@ -87,3 +87,4 @@ class MatchNotifier extends StateNotifier<List<MatchModel>> {
     return false;
   }
 }
+

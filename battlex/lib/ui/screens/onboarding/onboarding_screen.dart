@@ -91,7 +91,7 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
                               shape: BoxShape.circle,
                               boxShadow: [
                                 BoxShadow(
-                                  color: AppColors.primaryGlow.withOpacity(0.2),
+                                  color: AppColors.primaryGlow.withValues(alpha: 0.2),
                                   blurRadius: 40,
                                 ),
                               ],
@@ -155,3 +155,4 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
     );
   }
 }
+

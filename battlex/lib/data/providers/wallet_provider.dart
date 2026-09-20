@@ -99,3 +99,4 @@ class WalletNotifier extends StateNotifier<WalletState> {
     return false; // Insufficient funds
   }
 }
+
