@@ -151,7 +151,8 @@ class _HomeScreenState extends State<HomeScreen> {
         onTap: (index) {
           setState(() {
             _currentIndex = index;
-            // Handle routing here when other phases are built
+            if (index == 1) context.go('/my-matches');
+            if (index == 2) context.go('/leaderboard');
           });
         },
       ),

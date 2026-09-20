@@ -8,6 +8,8 @@ import '../../ui/screens/auth/otp_screen.dart';
 import '../../ui/screens/kyc/kyc_screen.dart';
 import '../../ui/screens/home/home_screen.dart';
 import '../../ui/screens/match/match_room_screen.dart';
+import '../../ui/screens/my_matches/my_matches_screen.dart';
+import '../../ui/screens/leaderboard/leaderboard_screen.dart';
 
 class AppRouter {
   static final router = GoRouter(
@@ -44,6 +46,14 @@ class AppRouter {
       GoRoute(
         path: '/match/:id',
         builder: (context, state) => MatchRoomScreen(matchId: state.pathParameters['id']!),
+      ),
+      GoRoute(
+        path: '/my-matches',
+        builder: (context, state) => const MyMatchesScreen(),
+      ),
+      GoRoute(
+        path: '/leaderboard',
+        builder: (context, state) => const LeaderboardScreen(),
       ),
     ],
   );
